@@ -1,0 +1,8 @@
+src/
+test/
+*.config.ts
+biome.json
+tsconfig.json
+.gitignore
+.claude/
+coverage/

@@ -1,0 +1,55 @@
+{
+    "name": "@nxsflow/amplify-email",
+    "version": "0.1.0",
+    "description": "AWS Amplify Gen 2 email category — defineEmail() for Amazon SES with DKIM, templates, and unsubscribe flows",
+    "type": "module",
+    "license": "Apache-2.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/nxsflow/amplify-email.git"
+    },
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "require": "./dist/index.cjs"
+        }
+    },
+    "main": "dist/index.cjs",
+    "module": "dist/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "scripts": {
+        "build": "tsup",
+        "dev": "tsup --watch",
+        "test": "vitest run",
+        "test:watch": "vitest",
+        "lint": "biome check .",
+        "format": "biome format --write .",
+        "typecheck": "tsc --noEmit"
+    },
+    "peerDependencies": {
+        "@aws-amplify/plugin-types": "^1.0.0",
+        "aws-cdk-lib": "^2.0.0",
+        "constructs": "^10.0.0"
+    },
+    "pnpm": {
+        "onlyBuiltDependencies": [
+            "@biomejs/biome",
+            "esbuild"
+        ]
+    },
+    "devDependencies": {
+        "@aws-amplify/plugin-types": "^1.12.0",
+        "@biomejs/biome": "^2.4.9",
+        "@changesets/cli": "^2.30.0",
+        "@types/node": "^22.0.0",
+        "aws-cdk-lib": "^2.170.0",
+        "constructs": "^10.4.2",
+        "tsup": "^8.4.0",
+        "typescript": "^5.8.3",
+        "vitest": "^4.1.2"
+    }
+}
