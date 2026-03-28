@@ -29,13 +29,18 @@ defineEmail(props)
 
 ## Key Files
 
-| File                   | Role                                               |
-| ---------------------- | -------------------------------------------------- |
-| `src/index.ts`         | Public API barrel                                  |
-| `src/types.ts`         | `EmailProps` and `EmailResources` interfaces       |
-| `src/factory.ts`       | `EmailFactory` + `defineEmail()` — the entry point |
-| `src/construct.ts`     | `AmplifyEmail` CDK construct (SES + Lambda + DNS)  |
-| `test/unit/factory.test.ts` | Smoke tests for the factory                   |
+| File | Role |
+|------|------|
+| `src/index.ts` | Backend barrel: `defineEmail`, `EmailProps`, `EmailResources` |
+| `src/types.ts` | `EmailProps` and `EmailResources` interfaces |
+| `src/factory.ts` | `EmailFactory` + `defineEmail()` + output registration |
+| `src/construct.ts` | `AmplifyEmail` CDK construct (SES + Lambda + DNS) |
+| `src/templates/standard.ts` | `renderStandardTemplate()` — HTML + plain text |
+| `src/templates/types.ts` | `TemplateInput`, `TemplateOutput` |
+| `src/functions/send/handler.ts` | Lambda handler: renders template, calls SES |
+| `src/client/index.ts` | Client barrel: `generateClient`, `EmailClient`, `SendEmailInput` |
+| `src/client/generate-client.ts` | `generateClient()` singleton — reads config, invokes Lambda |
+| `src/client/types.ts` | `SendEmailInput`, `SendEmailResult`, `EmailClient`, `EmailConfig` |
 
 ## Development Commands
 
@@ -54,6 +59,6 @@ pnpm format           # biome format --write
 - **Tooling**: pnpm, tsup, vitest, biome
 - **TypeScript**: strict mode, `moduleResolution: bundler`, ESNext target
 - **Imports**: use `.js` extension in source (resolved to `.ts` by bundler)
-- **Peer deps**: `aws-cdk-lib ^2`, `constructs ^10`, `@aws-amplify/plugin-types ^1` — never bundled
-- **Exports**: dual ESM + CJS via tsup; types via `.d.ts`
+- **Peer deps**: `aws-cdk-lib ^2`, `constructs ^10`, `@aws-amplify/plugin-types ^1`, `aws-amplify ^6` (optional, client only) — never bundled
+- **Exports**: two entry points via tsup — `@nxsflow/amplify-email` (backend) and `@nxsflow/amplify-email/client` (server-side)
 - **Singleton**: `EmailFactory` enforces one `defineEmail()` per backend (throws on second call)
