@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from "vitest";
-import { EmailFactory, defineEmail } from "../../src/factory.js";
+import { defineEmail, EmailFactory } from "../../src/factory.js";
 
 describe("defineEmail", () => {
     beforeEach(() => {
