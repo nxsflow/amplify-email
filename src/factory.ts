@@ -1,5 +1,8 @@
-import type { ConstructFactory, ConstructFactoryGetInstanceProps } from "@aws-amplify/plugin-types";
-import type { ResourceProvider } from "@aws-amplify/plugin-types";
+import type {
+    ConstructFactory,
+    ConstructFactoryGetInstanceProps,
+    ResourceProvider,
+} from "@aws-amplify/plugin-types";
 import { AmplifyEmail } from "./construct.js";
 import type { EmailProps, EmailResources } from "./types.js";
 
@@ -26,10 +29,32 @@ export class EmailFactory implements ConstructFactory<ResourceProvider<EmailReso
     getInstance(factoryProps: ConstructFactoryGetInstanceProps): ResourceProvider<EmailResources> {
         if (!this.instance) {
             const emailProps = this.props;
+            const outputStrategy = factoryProps.outputStorageStrategy;
             const provider = factoryProps.constructContainer.getOrCompute({
                 resourceGroupName: "email",
                 generateContainerEntry: ({ scope }) => {
                     const construct = new AmplifyEmail(scope, "AmplifyEmail", emailProps);
+
+                    // Register outputs so generateClient() can auto-discover config
+                    outputStrategy.appendToBackendOutputList("AWS::Amplify::Custom", {
+                        version: "1",
+                        payload: {
+                            customOutputs: JSON.stringify({
+                                custom: {
+                                    email: {
+                                        sendFunctionName: construct.resources.lambdaFunctionName,
+                                        ...(construct.resources.emailDomain
+                                            ? { domain: construct.resources.emailDomain }
+                                            : {}),
+                                        defaultSender: emailProps.defaultSender ?? "noreply",
+                                        defaultSenderName:
+                                            emailProps.defaultSenderName ?? "NexusFlow",
+                                    },
+                                },
+                            }),
+                        },
+                    });
+
                     return { resources: construct.resources };
                 },
             });
